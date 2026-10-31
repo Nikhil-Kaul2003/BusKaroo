@@ -128,6 +128,35 @@ docker compose up --build
 
 Compose loads the root `.env` file automatically. Copy `.env.example` to `.env`, set `JWT_SECRET` to your own Base64-encoded key (at least 32 decoded bytes), and change the local database values before the first start. `JWT_EXPIRATION` is the token lifetime in milliseconds; it defaults to `86400000` (24 hours). Spring Boot also imports the root `.env` for local `mvnw spring-boot:run` sessions. Compose starts PostgreSQL and the backend after the database health check passes. The API is exposed on `http://localhost:8080`; PostgreSQL is exposed on port `5432`. These sample settings are for local development only. Use secure, unique credentials and a strong JWT secret for any deployment.
 
+### First run on a new computer
+
+No customer or administrator login accounts are included in the GitHub repository. Each person creates an account in their own database. To start a local Docker setup, copy the example environment file and create a private JWT signing key:
+
+```powershell
+Copy-Item .env.example .env
+$bytes = New-Object byte[] 32
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+[Convert]::ToBase64String($bytes)
+```
+
+Paste the generated output into the `JWT_SECRET` line in `.env`. Choose a local database password and use the same value for `POSTGRES_PASSWORD` and `SPRING_DATASOURCE_PASSWORD`. Then start the backend and database:
+
+```powershell
+docker compose up --build
+```
+
+In another terminal, start the frontend with the Docker API port as its proxy target:
+
+```powershell
+cd frontend
+npm install
+$env:VITE_API_PROXY_TARGET = "http://localhost:8080"
+npm run dev
+```
+
+Open `http://localhost:5173` and choose **Sign Up** to create a customer login with a password of your choice. For an administrator account, set a private `ADMIN_REGISTRATION_KEY` in `.env` and use that key on the administrator registration page. Do not share your local `.env` file; each developer should create their own.
+
 ## Administrator access
 
 Customer registration is public. Administrator registration is available from the admin sign-in flow and requires an invitation key. Set `ADMIN_REGISTRATION_KEY` in the backend environment before starting the server. There is no public or hardcoded registration key in the project; the person operating the backend supplies it.
