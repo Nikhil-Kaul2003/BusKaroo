@@ -1,0 +1,56 @@
+.brand-logo {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  height: 42px;
+  padding: 2px 5px;
+  border-radius: 7px;
+  background: #fff;
+}
+
+.brand-logo-crop {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+.brand-logo-crop img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  width: 67.2px;
+  height: 67.2px;
+}
+
+.brand-logo-mark {
+  width: 52px;
+  height: 38px;
+}
+
+.brand-logo-mark img {
+  left: -8.3px;
+  top: -7.5px;
+}
+
+.brand-logo-wordmark {
+  width: 154px;
+  height: 26px;
+}
+
+.brand-logo-wordmark img {
+  width: 176.4px;
+  height: 176.4px;
+  left: -12.7px;
+  top: -120.7px;
+}
+
+@media (max-width: 768px) {
+  .brand-logo {
+    transform: scale(0.88);
+    transform-origin: left center;
+    margin-right: -26px;
+  }
+}

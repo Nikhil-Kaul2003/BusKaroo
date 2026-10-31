@@ -1,0 +1,42 @@
+/* ===================================
+   Card Component Styles
+   =================================== */
+
+.card {
+  background: var(--gradient-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  transition: all var(--transition-base);
+}
+
+.card-default {
+  background: var(--bg-surface);
+  backdrop-filter: none;
+}
+
+.card-elevated {
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: none;
+}
+
+.card-outline {
+  background: transparent;
+  border: 1px solid var(--border-default);
+}
+
+.card-hoverable {
+  cursor: pointer;
+}
+
+.card-hoverable:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card-hoverable:active {
+  transform: translateY(0);
+}

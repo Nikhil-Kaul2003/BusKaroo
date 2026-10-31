@@ -1,0 +1,24 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.15.0
+    hooks:
+      - id: pretty-format-java
+        name: Google Java Format
+        args: [ "--google-java-formatter-version", "1.17.0", "--aosp", "--autofix" ]
+
+  - repo: local
+    hooks:
+      - id: mvn-verify
+        name: Maven Verify (without tests)
+        entry: mvn verify -DskipTests=true
+        language: system
+        pass_filenames: false

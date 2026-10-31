@@ -1,0 +1,94 @@
+package busKaroo.controller;
+
+import busKaroo.dto.mapper.TripMapper;
+import busKaroo.dto.response.TripResponse;
+import busKaroo.model.Trip;
+import busKaroo.service.TripService;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/trips")
+public class TripController {
+
+    private final TripService tripService;
+    private final TripMapper tripMapper;
+
+    public TripController(TripService tripService, TripMapper tripMapper) {
+        this.tripService = tripService;
+        this.tripMapper = tripMapper;
+    }
+
+    /** Search for trips by locations and date. Public endpoint for users to find available trips. */
+    @GetMapping("/search")
+    public ResponseEntity<List<TripResponse>> searchTrips(
+            @RequestParam(required = false) String fromCity,
+            @RequestParam(required = false) Long fromTerminalId,
+            @RequestParam(required = false) String toCity,
+            @RequestParam(required = false) Long toTerminalId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(defaultValue = "1") Integer passengers,
+            @RequestParam(required = false, defaultValue = "any") String timeWindow) {
+        List<TripResponse> trips = tripService.searchTripsNew(
+                fromCity, fromTerminalId, toCity, toTerminalId, date, passengers, timeWindow);
+        return ResponseEntity.ok(trips);
+    }
+
+    /** Get all trips (Admin only). */
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<TripResponse>> getAllTrips() {
+        List<Trip> trips = tripService.findAll();
+        return ResponseEntity.ok(trips.stream().map(tripMapper::toResponse).toList());
+    }
+
+    /** Get a specific trip by ID. */
+    @GetMapping("/{id}")
+    public ResponseEntity<TripResponse> getTrip(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long fromTerminalId,
+            @RequestParam(required = false) String fromCity,
+            @RequestParam(required = false) Long toTerminalId,
+            @RequestParam(required = false) String toCity) {
+        Trip trip = tripService.findById(id);
+        return ResponseEntity.ok(tripMapper.toResponse(trip, fromTerminalId, fromCity, toTerminalId, toCity));
+    }
+
+    /** Get available seats count for a trip. */
+    @GetMapping("/{id}/available-seats")
+    public ResponseEntity<Integer> getAvailableSeats(@PathVariable Long id) {
+        int availableSeats = tripService.getAvailableSeats(id);
+        return ResponseEntity.ok(availableSeats);
+    }
+
+    /** Create a new trip (Admin only). */
+    @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<TripResponse> createTrip(@RequestBody Trip trip) {
+        Trip created = tripService.create(trip);
+        return ResponseEntity.created(URI.create("/api/trips/" + created.getId()))
+                .body(tripMapper.toResponse(created));
+    }
+
+    /** Update an existing trip (Admin only). */
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<TripResponse> updateTrip(@PathVariable Long id, @RequestBody Trip trip) {
+        return ResponseEntity.ok(tripMapper.toResponse(tripService.update(id, trip)));
+    }
+
+    /** Delete a trip (Admin only). */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteTrip(@PathVariable Long id) {
+        tripService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}

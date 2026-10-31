@@ -1,0 +1,118 @@
+package busKaroo.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@NamedQuery(name = "Route.findAllActive", query = "SELECT r FROM Route r WHERE r.isActive = true")
+@Table(name = "route")
+public class Route extends BaseEntity {
+
+    @Column(nullable = false, unique = true, length = 255)
+    private String name;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private OffsetDateTime updatedAt;
+
+    @OneToMany(
+            mappedBy = "route",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @OrderBy("sequenceOrder ASC")
+    private List<RouteStop> stops = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "route")
+    private Set<Trip> trips = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "routes")
+    private Set<Bus> buses = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "routes")
+    private Set<Driver> drivers = new HashSet<>();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<RouteStop> getStops() {
+        return stops;
+    }
+
+    public void setStops(List<RouteStop> stops) {
+        this.stops = stops;
+    }
+
+    public Set<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(Set<Trip> trips) {
+        this.trips = trips;
+    }
+
+    public Set<Bus> getBuses() {
+        return buses;
+    }
+
+    public void setBuses(Set<Bus> buses) {
+        this.buses = buses;
+    }
+
+    public Set<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(Set<Driver> drivers) {
+        this.drivers = drivers;
+    }
+}

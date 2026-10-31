@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-buskaroo}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-buskaroo_local}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-buskaroo-local-only}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+      ADMIN_REGISTRATION_KEY: ${ADMIN_REGISTRATION_KEY:-}
+
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-buskaroo}
+      POSTGRES_USER: ${POSTGRES_USER:-buskaroo_local}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-buskaroo-local-only}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-buskaroo_local} -d ${POSTGRES_DB:-buskaroo}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres_data:

@@ -1,0 +1,625 @@
+/* App-wide contrast, typography, and theme surfaces. */
+:root {
+  color-scheme: light;
+  --font-display: 'Clash Display', 'Arial Black', sans-serif;
+  --font-body: 'Satoshi', 'Segoe UI', sans-serif;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --primary: #f06a72;
+  --primary-hover: #ff858b;
+  --primary-light: rgba(240, 106, 114, 0.16);
+  --secondary: #f0e9df;
+  --secondary-light: #d8c8b4;
+  --accent: #dfbd7c;
+  --accent-hover: #f0d39b;
+  --bg-dark: #0a0d12;
+  --bg-primary: #10141b;
+  --bg-secondary: #151a22;
+  --bg-surface: #191f29;
+  --bg-elevated: #222a35;
+  --text-primary: #f6f2ec;
+  --text-secondary: #d2cbc1;
+  --text-muted: #aaa39a;
+  --text-inverse: #ffffff;
+  --border-default: #343944;
+  --border-hover: #555b66;
+  --border-focus: #f06a72;
+  --shadow-sm: 0 2px 7px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 18px 42px rgba(0, 0, 0, 0.32);
+  --shadow-glow: 0 0 24px rgba(240, 106, 114, 0.22);
+  --gradient-primary: linear-gradient(135deg, #ae1e2b 0%, #db4952 100%);
+  --gradient-dark: linear-gradient(180deg, #222933 0%, #10141b 100%);
+  --gradient-glass: linear-gradient(135deg, #222a35 0%, #191f29 100%);
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: 0.005em;
+  text-rendering: optimizeLegibility;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+.hero-title,
+.auth-title,
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.16;
+}
+
+strong,
+b,
+.btn,
+button {
+  font-weight: 650;
+}
+
+label,
+.input-label {
+  font-weight: 650;
+}
+
+:focus-visible {
+  outline-color: var(--primary);
+}
+
+html[data-theme='dark'] body,
+html[data-theme='dark'] .app,
+html[data-theme='dark'] .main,
+html[data-theme='dark'] .page,
+html[data-theme='dark'] .dashboard-page,
+html[data-theme='dark'] .search-page {
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+html[data-theme='dark'] .header,
+html[data-theme='dark'] .header-transparent,
+html[data-theme='dark'] .header-solid {
+  background: #111b2b;
+  border-color: #263750;
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme='dark'] .brand-wordmark,
+html[data-theme='dark'] .header-logo,
+html[data-theme='dark'] .profile-trigger,
+html[data-theme='dark'] .currency-trigger,
+html[data-theme='dark'] .header-nav-link {
+  color: #e8eef8;
+}
+
+html[data-theme='dark'] .brand-mark {
+  color: #8db6ff;
+  background: #203858;
+}
+
+html[data-theme='dark'] .theme-toggle,
+html[data-theme='dark'] .currency-trigger {
+  border-color: #344862;
+  color: #e1eaf8;
+  background: #17253a;
+}
+
+html[data-theme='dark'] .theme-toggle:hover,
+html[data-theme='dark'] .currency-trigger:hover,
+html[data-theme='dark'] .currency-trigger:focus-visible,
+html[data-theme='dark'] .currency-trigger.open {
+  border-color: #5c82bd;
+  background: #203553;
+  color: #fff;
+}
+
+html[data-theme='dark'] .header .btn-ghost,
+html[data-theme='dark'] .reservations-header-btn .btn {
+  color: #a9c8ff;
+}
+
+html[data-theme='dark'] .profile-dropdown,
+html[data-theme='dark'] .currency-dropdown,
+html[data-theme='dark'] .sort-dropdown-menu,
+html[data-theme='dark'] .autocomplete-suggestions {
+  color: var(--text-primary);
+  background: #17253a;
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .dropdown-item,
+html[data-theme='dark'] .currency-option,
+html[data-theme='dark'] .sort-dropdown-option,
+html[data-theme='dark'] .suggestion-city {
+  color: var(--text-secondary);
+}
+
+html[data-theme='dark'] .home-page,
+html[data-theme='dark'] .hero-section,
+html[data-theme='dark'] .popular-routes-section,
+html[data-theme='dark'] .features-section,
+html[data-theme='dark'] .fleet-section,
+html[data-theme='dark'] .deals-section,
+html[data-theme='dark'] .stats-section {
+  color: var(--text-primary);
+  background: #0b1220;
+  border-color: #263750;
+}
+
+html[data-theme='dark'] .section-title,
+html[data-theme='dark'] .section-title .text-brand-navy,
+html[data-theme='dark'] .feature-card h3,
+html[data-theme='dark'] .fleet-text-column h3,
+html[data-theme='dark'] .deal-card-section-title {
+  color: #edf3fb;
+}
+
+html[data-theme='dark'] .section-subtitle,
+html[data-theme='dark'] .feature-card p,
+html[data-theme='dark'] .fleet-description,
+html[data-theme='dark'] .deal-description {
+  color: #bdc9da;
+}
+
+html[data-theme='dark'] .feature-card,
+html[data-theme='dark'] .deal-card,
+html[data-theme='dark'] .reservations-dashboard-card,
+html[data-theme='dark'] .reservation-card,
+html[data-theme='dark'] .profile-neobrutalist-card,
+html[data-theme='dark'] .trip-details-page .card,
+html[data-theme='dark'] .search-page .card,
+html[data-theme='dark'] .trip-card-redesign,
+html[data-theme='dark'] .auth-card,
+html[data-theme='dark'] .payment-container {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
+}
+
+html[data-theme='dark'] .search-card {
+  color: var(--text-primary);
+  background: #111b2b;
+  border-color: #2b3b53;
+}
+
+html[data-theme='dark'] .search-page-panel-wrapper {
+  background: #111b2b;
+  border-color: #293a53;
+}
+
+html[data-theme='dark'] .search-input,
+html[data-theme='dark'] .input,
+html[data-theme='dark'] input,
+html[data-theme='dark'] select,
+html[data-theme='dark'] textarea,
+html[data-theme='dark'] .profile-form .country-select-trigger,
+html[data-theme='dark'] .profile-form .country-read-only-box,
+html[data-theme='dark'] .profile-form .phone-read-only-box {
+  color: var(--text-primary) !important;
+  background: #0e1828 !important;
+  border-color: #34455f !important;
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: #93a3ba;
+}
+
+html[data-theme='dark'] .suggestions-header,
+html[data-theme='dark'] .sort-dropdown-trigger,
+html[data-theme='dark'] .reservations-body,
+html[data-theme='dark'] .reservations-summary-item,
+html[data-theme='dark'] .empty-state,
+html[data-theme='dark'] .dashboard-tabs-container,
+html[data-theme='dark'] .dashboard-tabs-content,
+html[data-theme='dark'] .checkout-receipt-card,
+html[data-theme='dark'] .contact-info-card,
+html[data-theme='dark'] .passengers-card,
+html[data-theme='dark'] .seat-map-card {
+  color: var(--text-primary);
+  background: #152238;
+  border-color: var(--border-default);
+}
+
+html[data-theme='dark'] .reservations-page-header {
+  background: linear-gradient(115deg, #111b2b 35%, #172943 100%);
+}
+
+html[data-theme='dark'] .reservations-page-header h1,
+html[data-theme='dark'] .reservations-page-header .summary-value,
+html[data-theme='dark'] .reservations-page-header p,
+html[data-theme='dark'] .summary-value,
+html[data-theme='dark'] .reservation-point-value,
+html[data-theme='dark'] .trip-header-time,
+html[data-theme='dark'] .profile-title-details h1,
+html[data-theme='dark'] .profile-title-details h2,
+html[data-theme='dark'] .payment-title,
+html[data-theme='dark'] .trip-details-page h1,
+html[data-theme='dark'] .trip-details-page h2,
+html[data-theme='dark'] .trip-details-page h3 {
+  color: #edf3fb;
+}
+
+html[data-theme='dark'] .reservations-summary,
+html[data-theme='dark'] .reservations-summary-item,
+html[data-theme='dark'] .reservation-header,
+html[data-theme='dark'] .reservation-actions,
+html[data-theme='dark'] .reservation-card,
+html[data-theme='dark'] .profile-divider-line {
+  border-color: #2b3b53;
+}
+
+html[data-theme='dark'] .reservations-summary {
+  background: #111b2b;
+}
+
+html[data-theme='dark'] .auth-page,
+html[data-theme='dark'] .payment-page {
+  color: var(--text-primary);
+  background: radial-gradient(circle at 12% 8%, #172b49 0, transparent 35%), #0b1220;
+}
+
+html[data-theme='dark'] .auth-title,
+html[data-theme='dark'] .auth-subtitle,
+html[data-theme='dark'] .input-label,
+html[data-theme='dark'] .auth-footer,
+html[data-theme='dark'] .profile-sheet-title,
+html[data-theme='dark'] .profile-form label {
+  color: var(--text-primary);
+}
+
+html[data-theme='dark'] .trip-details-page,
+html[data-theme='dark'] .trip-details-page .page,
+html[data-theme='dark'] .profile-page {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+html[data-theme='dark'] .trip-details-page .card h3,
+html[data-theme='dark'] .trip-details-page .card p,
+html[data-theme='dark'] .trip-details-page .card span,
+html[data-theme='dark'] .profile-neobrutalist-card p,
+html[data-theme='dark'] .profile-neobrutalist-card span {
+  color: inherit;
+}
+
+html[data-theme='dark'] .logout-modal-card {
+  color: var(--text-primary);
+  background: #17253a;
+  border-color: var(--border-default);
+}
+
+/* BusKaroo premium finish: logo red, ink, warm ivory, and restrained brass. */
+::selection {
+  color: #fff;
+  background: #db4a2b;
+}
+
+body {
+  background: var(--bg-primary);
+}
+
+.header-transparent {
+  background: var(--bg-surface);
+  border-bottom-color: var(--border-default);
+  box-shadow: 0 5px 24px rgba(30, 24, 17, 0.045);
+}
+
+.header-nav-link,
+.theme-toggle,
+.currency-trigger,
+.profile-trigger {
+  color: var(--text-secondary);
+}
+
+.theme-toggle,
+.currency-trigger {
+  border-color: var(--border-default);
+  background: var(--bg-surface);
+}
+
+.theme-toggle:hover,
+.currency-trigger:hover,
+.currency-trigger:focus-visible,
+.currency-trigger.open {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+html[data-theme='light'] .header .reservations-header-btn:is(:hover, :focus-visible, .active) .btn {
+  color: var(--primary) !important;
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .header .reservations-header-btn:is(:hover, :focus-visible, .active) .btn {
+  color: var(--primary) !important;
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+:is(.card, .feature-card, .deal-card, .trip-card-redesign, .reservation-card,
+    .reservations-dashboard-card, .auth-card, .payment-container,
+    .profile-neobrutalist-card) {
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+:is(.trip-card-redesign, .reservation-card, .feature-card, .deal-card):hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.search-input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-light) !important;
+}
+
+.btn-primary,
+.search-submit-btn,
+.book-trip-btn {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(199, 32, 45, 0.16);
+  letter-spacing: 0.01em;
+}
+
+.btn-primary:hover:not(:disabled),
+.search-submit-btn:hover,
+.book-trip-btn:hover {
+  box-shadow: 0 12px 24px rgba(199, 32, 45, 0.24);
+}
+
+html[data-theme='dark'] .brand-mark {
+  color: #ff858b;
+  background: rgba(240, 106, 114, 0.14);
+}
+
+html[data-theme='dark'] .theme-toggle,
+html[data-theme='dark'] .currency-trigger {
+  color: var(--text-secondary);
+  border-color: var(--border-default);
+  background: var(--bg-surface);
+}
+
+html[data-theme='dark'] .header-nav-link:hover,
+html[data-theme='dark'] .header-nav-link:focus-visible {
+  color: var(--primary);
+}
+
+/* Carry the BusKaroo wordmark typography through the booking journey. */
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, .page-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #db4a2b #e4e2dd;
+}
+
+html::-webkit-scrollbar { width: 8px; }
+html::-webkit-scrollbar-track { background: #e4e2dd; }
+html::-webkit-scrollbar-thumb { background: #db4a2b; border-radius: 0; }
+
+/* Search: clear, editorial route panels with a red-orange travel accent. */
+html[data-theme='light'] .search-page {
+  color: #1e1e1e;
+  background: linear-gradient(180deg, #e4e2dd 0%, #efede8 100%);
+}
+
+html[data-theme='light'] .search-page-panel-wrapper {
+  background: rgba(248, 247, 244, 0.88);
+  border-color: rgba(30, 30, 30, 0.18);
+}
+
+html[data-theme='light'] .search-page-panel-wrapper .search-card {
+  border: 1px solid #1e1e1e;
+  border-radius: 4px;
+  background: #f8f7f4;
+  box-shadow: 7px 7px 0 #db4a2b;
+}
+
+html[data-theme='light'] .search-page .trip-card-redesign {
+  border: 1px solid rgba(30, 30, 30, 0.72);
+  border-left: 5px solid #db4a2b;
+  border-radius: 6px;
+  background: #fbfaf7;
+  box-shadow: 4px 4px 0 rgba(30, 30, 30, 0.12);
+}
+
+html[data-theme='light'] .search-page .trip-card-redesign:hover {
+  border-color: #1e1e1e;
+  box-shadow: 7px 7px 0 #f8a348;
+  transform: translateY(-2px);
+}
+
+/* Reservations: warm paper tickets with clear journey/status accents. */
+html[data-theme='light'] .dashboard-page:has(.reservations-container) {
+  color: #1e1e1e;
+  background: #e4e2dd;
+}
+
+html[data-theme='light'] .reservations-dashboard-card {
+  border: 1px solid #1e1e1e;
+  border-radius: 4px;
+  background: #f8f7f4;
+  box-shadow: 8px 8px 0 #f8a348;
+}
+
+html[data-theme='light'] .reservations-page-header {
+  border-bottom: 1px solid rgba(30, 30, 30, 0.2);
+  background: linear-gradient(115deg, #f8f7f4, #f4e2dc);
+}
+
+html[data-theme='light'] .reservation-card {
+  border: 1px solid rgba(30, 30, 30, 0.58);
+  border-left: 5px solid #db4a2b;
+  border-radius: 5px;
+  background: #fffefd;
+  box-shadow: 4px 4px 0 rgba(30, 30, 30, 0.1);
+}
+
+html[data-theme='light'] .reservation-card:hover {
+  border-color: #1e1e1e;
+  box-shadow: 7px 7px 0 #ff89a9;
+}
+
+/* Login and signup: quiet ivory canvas, ink frame, and red call to action. */
+html[data-theme='light'] .auth-page {
+  color: #1e1e1e;
+  background: radial-gradient(circle at 12% 12%, rgba(255, 137, 169, 0.28), transparent 25%),
+    radial-gradient(circle at 88% 82%, rgba(248, 163, 72, 0.2), transparent 24%), #e4e2dd;
+}
+
+html[data-theme='light'] .auth-card {
+  border: 1px solid #1e1e1e;
+  border-radius: 5px;
+  background: #fbfaf7;
+  box-shadow: 9px 9px 0 #db4a2b;
+}
+
+html[data-theme='light'] .auth-account-tabs button.active,
+html[data-theme='light'] .auth-form .btn-primary,
+html[data-theme='light'] .auth-form button[type='submit'] {
+  color: #fff;
+  background: #db4a2b;
+}
+
+/* Payment: warm checkout paper with a confident ink-and-red hierarchy. */
+html[data-theme='light'] .payment-page {
+  color: #1e1e1e;
+  background: radial-gradient(circle at 85% 12%, rgba(248, 163, 72, 0.22), transparent 28%), #e4e2dd;
+}
+
+html[data-theme='light'] .payment-container {
+  border: 1px solid #1e1e1e;
+  border-radius: 5px;
+  background: #fbfaf7;
+  box-shadow: 8px 8px 0 #ff89a9;
+}
+
+/* Profile: personal details on a clean paper surface with a soft-pink highlight. */
+html[data-theme='light'] .dashboard-page:not(:has(.reservations-container)) {
+  color: #1e1e1e;
+  background: #e4e2dd;
+}
+
+html[data-theme='light'] .profile-neobrutalist-card {
+  border: 1px solid #1e1e1e;
+  border-radius: 5px;
+  background: #fbfaf7;
+  box-shadow: 7px 7px 0 #ff89a9;
+}
+
+/* Admin: stronger ink framing, with alternating logo-inspired metric accents. */
+html[data-theme='light'] .admin-page {
+  color: #1e1e1e;
+}
+
+html[data-theme='light'] .admin-page-header {
+  padding-bottom: 20px;
+  border-bottom: 2px solid #1e1e1e;
+}
+
+html[data-theme='light'] .admin-stat-card,
+html[data-theme='light'] .admin-form-card,
+html[data-theme='light'] .admin-table-card {
+  border: 1px solid #1e1e1e;
+  border-radius: 4px;
+  background: #fbfaf7;
+  box-shadow: 5px 5px 0 rgba(30, 30, 30, 0.16);
+}
+
+html[data-theme='light'] .admin-stat-card:nth-child(3n + 1) { border-top: 5px solid #db4a2b; }
+html[data-theme='light'] .admin-stat-card:nth-child(3n + 2) { border-top: 5px solid #f8a348; }
+html[data-theme='light'] .admin-stat-card:nth-child(3n) { border-top: 5px solid #ff89a9; }
+
+/* Seat selection and checkout details use the same paper-ticket treatment. */
+html[data-theme='light'] .trip-details-page {
+  color: #1e1e1e;
+  background: #e4e2dd;
+}
+
+html[data-theme='light'] .trip-details-page .card,
+html[data-theme='light'] .trip-details-page .trip-header-card,
+html[data-theme='light'] .trip-details-page .seat-map-card,
+html[data-theme='light'] .trip-details-page .checkout-receipt-card {
+  border: 1px solid #1e1e1e;
+  border-radius: 4px;
+  background: #fbfaf7;
+  box-shadow: 6px 6px 0 rgba(30, 30, 30, 0.14);
+}
+
+html[data-theme='light'] .trip-details-page .seat-element-group.selected .seat-rect {
+  fill: #db4a2b;
+  stroke: #1e1e1e;
+}
+
+/* Small entrance lift on the key panels; keeps forms easy to use. */
+:is(.auth-card, .payment-container, .reservations-dashboard-card,
+    .profile-neobrutalist-card, .admin-stat-card, .admin-form-card,
+    .admin-table-card, .trip-card-redesign, .trip-header-card,
+    .seat-map-card, .checkout-receipt-card) {
+  animation: brand-page-rise 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes brand-page-rise {
+  from { opacity: 0; translate: 0 14px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+html[data-theme='dark'] :is(.search-page, .dashboard-page,
+  .auth-page, .payment-page, .trip-details-page) {
+  background-color: #10141b;
+}
+
+html[data-theme='dark'] :is(.search-page .trip-card-redesign,
+  .reservations-dashboard-card, .reservation-card, .auth-card, .payment-container,
+  .profile-neobrutalist-card, .admin-stat-card, .admin-form-card,
+  .admin-table-card, .trip-details-page .card, .trip-header-card,
+  .seat-map-card, .checkout-receipt-card) {
+  border-color: #49434a;
+  box-shadow: 6px 6px 0 rgba(219, 74, 43, 0.34);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

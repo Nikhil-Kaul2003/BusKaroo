@@ -1,0 +1,523 @@
+/* ===================================
+   SearchPanel Component Styles
+   =================================== */
+
+.search-card {
+  max-width: 1050px;
+  width: 92%;
+  margin: -66px auto 0 auto;
+  /* Vertical center perfectly aligned with bottom edge of banner */
+  background: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 28px rgba(19, 41, 104, 0.24);
+  padding: var(--space-lg);
+  position: relative;
+  z-index: 10;
+  transition: box-shadow var(--transition-base);
+}
+
+/* BusKaroo search card */
+.search-card {
+  max-width: 1110px;
+  padding: 22px;
+  border: 1px solid #e2eaf5;
+  border-radius: 17px;
+  box-shadow: 0 18px 45px rgba(23, 45, 82, 0.14);
+}
+
+.search-card:hover {
+  box-shadow: 0 18px 45px rgba(23, 45, 82, 0.17) !important;
+}
+
+.search-fields-grid {
+  gap: 12px;
+}
+
+.search-field label {
+  color: #65758d;
+  letter-spacing: 0.075em;
+}
+
+.search-input {
+  height: 54px;
+  border-color: #dce5f1;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(23, 105, 232, 0.1);
+}
+
+.search-button-coral {
+  min-height: 54px;
+  border-radius: 11px;
+  background: var(--gradient-primary);
+  box-shadow: 0 8px 16px rgba(23, 105, 232, 0.18);
+}
+
+.search-button-coral:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+@media (max-width: 768px) {
+  .search-card {
+    padding: 18px;
+  }
+}
+
+.search-card:hover {
+  box-shadow: 0 12px 28px rgba(19, 41, 104, 0.24) !important;
+}
+
+.search-form {
+  width: 100%;
+}
+
+.search-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 14px;
+}
+
+.search-options-row label {
+  margin: 0;
+}
+
+.search-options-row select {
+  min-height: 40px;
+  max-width: 270px;
+  border: 1px solid var(--border-default);
+  border-radius: 9px;
+  padding: 8px 12px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  font: inherit;
+}
+
+.search-options-row span {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.search-fields-grid {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-end;
+  width: 100%;
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.search-field label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-xs);
+  padding-left: 2px;
+}
+
+.autocomplete-field {
+  flex: 2.4;
+  position: relative;
+}
+
+.date-field {
+  flex: 1.3;
+  min-width: 0;
+}
+
+.passenger-field {
+  flex: 1.3;
+  min-width: 0;
+}
+
+.search-action-container {
+  flex: 1.4;
+}
+
+.search-input {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  height: 48px;
+  transition: all var(--transition-fast);
+}
+
+/* Fix iOS Safari native date picker width and layout issues */
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  display: block;
+  min-height: 20px;
+  text-align: left;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(19, 41, 104, 0.08);
+  background: var(--bg-secondary);
+}
+
+/* Autocomplete Suggestion Dropdowns */
+.autocomplete-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: max-content;
+  min-width: 125%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+  padding: var(--space-xs) 0;
+}
+
+.suggestions-header {
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
+  color: var(--text-muted);
+  padding: var(--space-xs) var(--space-md);
+  background: var(--bg-elevated);
+  margin-bottom: var(--space-xs);
+}
+
+.suggestion-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  border-bottom: 1px solid var(--border-default);
+  white-space: nowrap;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: var(--bg-elevated);
+}
+
+.suggestion-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: rgba(19, 41, 104, 0.06);
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.suggestion-separator {
+  color: var(--text-muted);
+  font-weight: var(--font-normal);
+}
+
+.suggestion-terminal {
+  color: var(--text-secondary);
+  font-weight: var(--font-medium);
+}
+
+.suggestion-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.suggestion-city {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-name {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.suggestions-empty {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  padding: var(--space-md);
+  text-align: center;
+}
+
+/* Direction Swap Button (Inline) & Clear Buttons */
+.input-with-swap-container,
+.input-with-clear-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-with-swap-container .search-input {
+  padding-right: 72px; /* Space for both swap and clear buttons on desktop */
+}
+
+.input-with-clear-container .search-input {
+  padding-right: 34px; /* Space for clear button */
+}
+
+.swap-button-inline {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  /* Centered perfectly inside 48px height parent input: (48px - 28px) / 2 = 10px */
+  transform: rotate(0deg);
+  background: transparent;
+  border: none;
+  color: var(--secondary);
+  /* Thematic Dark Navy by default */
+  font-size: 1.35rem;
+  font-weight: var(--font-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+  transform-origin: center center;
+  padding: 0;
+  width: 28px;
+  /* TO ADJUST SWAP BUTTON SIZE: Change width and height here (e.g., 28px is 1.15x of original 24px). Also update SVG width/height in SearchPanel.tsx accordingly. */
+  height: 28px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Swapped state: color changes to primary orange and rotates 180deg (flip effect) */
+.swap-button-inline.swapped {
+  color: var(--primary);
+  /* Thematic Coral Orange */
+  transform: rotate(180deg);
+}
+
+.clear-button-inline {
+  position: absolute;
+  top: 12px; /* Center inside 48px input: (48 - 24) / 2 = 12px */
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.clear-button-inline:hover {
+  color: var(--primary);
+  background-color: rgba(19, 41, 104, 0.08);
+  transform: scale(1.1);
+}
+
+.to-clear {
+  right: 12px;
+}
+
+.from-clear {
+  right: 44px; /* Placed left of the swap button on desktop */
+}
+
+/* Passenger Counter Widget */
+.passenger-counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  height: 48px;
+  padding: 0 var(--space-sm);
+}
+
+.passenger-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  font-weight: var(--font-bold);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.passenger-btn:hover:not(:disabled) {
+  background: var(--bg-elevated);
+  border-color: var(--border-hover);
+  transform: scale(1.05);
+}
+
+.passenger-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.passenger-count-display {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Coral CTA Button */
+.search-button-coral {
+  width: 100%;
+  height: 48px;
+  background: var(--gradient-primary) !important;
+  color: var(--text-inverse) !important;
+  font-weight: var(--font-bold) !important;
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md) !important;
+}
+
+.search-button-coral:hover {
+  box-shadow: var(--shadow-glow) !important;
+  transform: translateY(-1.5px);
+}
+
+.search-error {
+  color: var(--error);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  margin-top: var(--space-md);
+  text-align: left;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .search-card {
+    margin: -20px auto 0 auto;
+    /* Reduced overlap for an elegant, spacious transition */
+    width: 86%;
+    /* TO ADJUST PANEL WIDTH / SIDE MARGINS ON MOBILE: Change this percentage (e.g., 86% leaves 14% total space, creating a 7% margin on each side. Decrease percentage to make panel narrower / increase margins). */
+    padding: var(--space-md);
+  }
+
+  .search-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    align-items: end;
+  }
+
+  .autocomplete-field {
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  .date-field {
+    grid-column: span 1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .date-field .search-input {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+
+  .passenger-field {
+    grid-column: span 1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-action-container {
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  /* In vertical version, dropdown panel shouldn't exceed search panel width */
+  .autocomplete-suggestions {
+    width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  /* Mobile Inline Swap Button Adjustment */
+  .swap-button-inline {
+    top: auto;
+    bottom: -30px;
+    /* Floats perfectly in the gap/label space of vertical stack (adjusted for 28px button) */
+    right: 20px;
+    transform: rotate(90deg);
+    /* Turn horizontal arrows ⇄ into vertical arrows ⇅ */
+  }
+
+  .swap-button-inline.swapped {
+    transform: rotate(270deg);
+    /* Swapped vertical flip */
+  }
+
+  .input-with-swap-container .search-input {
+    padding-right: 34px !important;
+  }
+
+  .from-clear {
+    right: 12px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .search-options-row { justify-content: flex-start; }
+  .search-options-row select { max-width: none; flex: 1; }
+  .search-options-row span { flex-basis: 100%; }
+}
