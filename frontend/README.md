@@ -1,6 +1,6 @@
 # BusKaroo frontend
 
-React and TypeScript single-page application built with Vite. It provides customer trip search and booking, reservations and profile pages, plus an admin interface for bus and category management.
+React and JavaScript single-page application built with Vite. It provides customer trip search and booking, reservations and profile pages, plus an admin interface for bus and category management.
 
 For full-stack setup, database profiles, API details, and environment variables, see the [root README](../README.md).
 

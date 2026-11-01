@@ -323,7 +323,7 @@ input[type="date"]::-webkit-date-and-time-value {
   transform-origin: center center;
   padding: 0;
   width: 28px;
-  /* TO ADJUST SWAP BUTTON SIZE: Change width and height here (e.g., 28px is 1.15x of original 24px). Also update SVG width/height in SearchPanel.tsx accordingly. */
+  /* TO ADJUST SWAP BUTTON SIZE: Change width and height here (e.g., 28px is 1.15x of original 24px). Also update SVG width/height in SearchPanel.jsx accordingly. */
   height: 28px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;

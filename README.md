@@ -34,7 +34,7 @@ Seed data includes Indian state roadways coaches and 30 dedicated Luxury plus 30
 | Backend | Java 17, Spring Boot 3.5, Spring MVC, Spring Security, Spring Data JPA / Hibernate |
 | Database | PostgreSQL |
 | Authentication | Stateless JWT |
-| Frontend | React 19, TypeScript, Vite, React Router, Axios |
+| Frontend | React 19, JavaScript, Vite, React Router, Axios |
 | Build | Maven Wrapper and npm |
 
 The backend Java package is `busKaroo`.
@@ -58,7 +58,7 @@ The backend Java package is `busKaroo`.
 │   ├── data.sql                  # Idempotent Indian seed data
 │   └── db/                       # Database schema resources
 ├── src/test/java/busKaroo/       # Backend unit and integration tests
-├── frontend/                     # React and TypeScript application
+├── frontend/                     # React and JavaScript application
 ├── docker-compose.yml            # Backend and PostgreSQL services
 ├── Dockerfile
 └── pom.xml
