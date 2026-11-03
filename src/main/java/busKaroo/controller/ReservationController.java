@@ -4,6 +4,7 @@ import busKaroo.dto.mapper.ReservationMapper;
 import busKaroo.dto.request.CreateReservationRequest;
 import busKaroo.dto.response.ReservationResponse;
 import busKaroo.exception.ForbiddenException;
+import busKaroo.exception.ApiError;
 import busKaroo.model.Reservation;
 import busKaroo.security.SecurityUtils;
 import busKaroo.service.PaymentService;
@@ -14,7 +15,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +51,6 @@ public class ReservationController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     public ResponseEntity<List<ReservationResponse>> getMyReservations() {
         Long currentUserId = securityUtils.getCurrentUserId();
         List<Reservation> reservations = reservationService.findByUserId(currentUserId);
@@ -83,9 +82,12 @@ public class ReservationController {
 
     @PostMapping("/{id}/pay")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> payReservation(@PathVariable Long id) {
+    public ResponseEntity<?> payReservation(@PathVariable Long id) {
         Long currentUserId = securityUtils.getCurrentUserId();
-        paymentService.payReservation(id, currentUserId);
+        if (!paymentService.payReservation(id, currentUserId)) {
+            return ResponseEntity.status(HttpStatus.GONE)
+                    .body(new ApiError("Reservation expired", "The payment hold expired. Please book the trip again."));
+        }
         return ResponseEntity.ok().build();
     }
 }

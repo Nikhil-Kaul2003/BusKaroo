@@ -55,8 +55,8 @@ The backend Java package is `busKaroo`.
 ├── src/main/resources/
 │   ├── application.properties
 │   ├── application-existing-db.properties
-│   ├── data.sql                  # Idempotent Indian seed data
-│   └── db/                       # Database schema resources
+│   ├── schema.sql                # PostgreSQL enum/legacy column compatibility
+│   └── data.sql                  # Idempotent Indian seed data
 ├── src/test/java/busKaroo/       # Backend unit and integration tests
 ├── frontend/                     # React and JavaScript application
 ├── docker-compose.yml            # Backend and PostgreSQL services
@@ -86,7 +86,13 @@ $env:JWT_SECRET = "YOUR_PRIVATE_SECRET_AT_LEAST_32_CHARACTERS_LONG"
 .\mvnw.cmd spring-boot:run
 ```
 
-The backend listens on `http://localhost:8081` by default. In the default profile, Hibernate updates the schema and Spring runs `data.sql` for seed records.
+The backend listens on `http://localhost:8081` by default.
+
+### Database initialization
+
+Flyway is not used by this project. Hibernate with `ddl-auto=update` creates missing tables and applies additive entity changes. After Hibernate initializes, `schema.sql` ensures PostgreSQL enum types and a few legacy status columns exist; `data.sql` inserts the default seed records. Java startup initializers add the Normal, Luxury, and Sleeper categories and related fleet data. The default profile also generates trip schedules for seeded routes that have no trips yet.
+
+The `existing-db` profile sets `spring.sql.init.mode=never`, so it does not rerun `schema.sql` or `data.sql` against an existing database. Hibernate still applies entity schema updates, and the idempotent category/fleet initializer still runs. This split supports a seeded local setup and a populated database without reseeding customer data. `ddl-auto=update` is for this demo/local workflow; production schema changes should use a reviewed migration process.
 
 ### Backend with an existing database
 
@@ -102,6 +108,8 @@ $env:JWT_SECRET = "YOUR_PRIVATE_SECRET_AT_LEAST_32_CHARACTERS_LONG"
 ```
 
 The `existing-db` profile listens on `http://localhost:8082` and disables SQL seed-file execution. The startup initializer is idempotent; restart the backend after changes to seed or initializer logic so it can apply them.
+
+Pending reservations hold their seats for 15 minutes by default. Set `PENDING_RESERVATION_TTL_MINUTES` to change the hold duration. A scheduled backend task marks stale pending reservations `EXPIRED`, while availability checks ignore pending reservations past the hold time even before the next scan.
 
 ### Frontend
 
@@ -126,7 +134,7 @@ From the repository root:
 docker compose up --build
 ```
 
-Compose loads the root `.env` file automatically. Copy `.env.example` to `.env`, set `JWT_SECRET` to your own Base64-encoded key (at least 32 decoded bytes), and change the local database values before the first start. `JWT_EXPIRATION` is the token lifetime in milliseconds; it defaults to `86400000` (24 hours). Spring Boot also imports the root `.env` for local `mvnw spring-boot:run` sessions. Compose starts PostgreSQL and the backend after the database health check passes. The API is exposed on `http://localhost:8080`; PostgreSQL is exposed on port `5432`. These sample settings are for local development only. Use secure, unique credentials and a strong JWT secret for any deployment.
+Compose loads the root `.env` file automatically. Copy `.env.example` to `.env`, set `JWT_SECRET` to your own Base64-encoded key (at least 32 decoded bytes), and change the local database values before the first start. `JWT_EXPIRATION` is the token lifetime in milliseconds; it defaults to `86400000` (24 hours). `PENDING_RESERVATION_TTL_MINUTES` defaults to 15. Spring Boot also imports the root `.env` for local `mvnw spring-boot:run` sessions. Inside Compose, the backend must connect to the PostgreSQL service using hostname `postgres` (as configured in `docker-compose.yml`); `localhost` is only for applications running outside the Compose network. Compose starts PostgreSQL and the backend after the database health check passes. The API is exposed on `http://localhost:8080`; PostgreSQL is exposed on port `5432`. These sample settings are for local development only. Use secure, unique credentials and a strong JWT secret for any deployment.
 
 ### First run on a new computer
 
@@ -187,6 +195,8 @@ All API paths are prefixed with `/api`. JSON endpoints use the JWT bearer token 
 
 The driver dashboard route currently displays a placeholder in the frontend, although the driver API is present.
 
+Frontend protected routes only control what pages the browser displays. API authorization is enforced separately by Spring Security authentication and role checks on the controllers; admin API operations require `ROLE_ADMIN` even if a customer directly calls the endpoint.
+
 ## Build and tests
 
 Build the backend without running tests:
@@ -211,7 +221,8 @@ npm run build
 ## Notes
 
 - The customer currency is INR; fares and fees are treated as Indian rupees.
-- Seat occupancy is calculated from reservations for the selected trip segment. Seat selection is validated when the reservation is submitted.
+- Seat occupancy is calculated from reservations for the selected trip segment. Multi-seat reservations acquire per-seat advisory locks in sorted seat order to reduce deadlock risk, and availability is rechecked within the booking transaction.
 - Search may return a direct bus or one-transfer alternatives. Transfer legs are booked as separate reservations.
-- Payment is simulated and does not charge a card or UPI account.
+- Payment is simulated and does not charge a card or UPI account. Cancellation changes reservation status; it does not issue a real refund or contact a payment provider. If a confirmed reservation is cancelled, its historical simulated payment record remains `COMPLETED` because no refund transaction is created.
+- Unpaid pending reservations expire after the configured hold time and release their seats.
 - The seed fleet and route schedules are demo data. Confirm real operator schedules, fares, and availability before using the app as a live booking service.

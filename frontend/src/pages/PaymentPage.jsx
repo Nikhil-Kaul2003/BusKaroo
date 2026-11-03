@@ -8,6 +8,7 @@ export const PaymentPage = () => {
     const [countdown, setCountdown] = useState(15);
     const [processing, setProcessing] = useState(false);
     const [checkingStatus, setCheckingStatus] = useState(true);
+    const [paymentExpired, setPaymentExpired] = useState(false);
     const [tripId, setTripId] = useState(null);
     const [error, setError] = useState('');
     const handleCompletePayment = useCallback(async () => {
@@ -27,8 +28,15 @@ export const PaymentPage = () => {
                 navigate('/reservations', { replace: true });
             }, 1600);
         }
-        catch {
-            setError('An error occurred while confirming payment. Please check your reservations.');
+        catch (err) {
+            const status = err?.response?.status;
+            if (status === 410) {
+                setPaymentExpired(true);
+                setError('This unpaid reservation expired and its seats have been released. Please choose the trip again.');
+            }
+            else {
+                setError('An error occurred while confirming payment. Please check your reservations.');
+            }
             setProcessing(false);
         }
     }, [processing, reservationId, tripId, navigate]);
@@ -57,7 +65,7 @@ export const PaymentPage = () => {
         checkReservationStatus();
     }, [reservationId, navigate]);
     useEffect(() => {
-        if (checkingStatus)
+        if (checkingStatus || paymentExpired)
             return;
         if (countdown <= 0) {
             setTimeout(() => {
@@ -69,7 +77,7 @@ export const PaymentPage = () => {
             setCountdown((prev) => prev - 1);
         }, 1000);
         return () => clearTimeout(timer);
-    }, [countdown, checkingStatus, handleCompletePayment]);
+    }, [countdown, checkingStatus, paymentExpired, handleCompletePayment]);
     if (checkingStatus) {
         return (<div className="payment-page">
         <div className="payment-container">
@@ -117,6 +125,9 @@ export const PaymentPage = () => {
           </p>
 
           {error && <div className="payment-error">{error}</div>}
+          {paymentExpired && (<button type="button" className="payment-skip-btn" onClick={() => navigate('/reservations')}>
+              View My Reservations
+            </button>)}
         </div>
       </div>
     </div>);

@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Button } from '../components/common';
 import { useCurrency } from '../context/CurrencyContext';
+import { getApiErrorMessage } from '../api/client';
 import { reservationsApi } from '../api/reservations';
 import './ReservationsPage.css';
+
 export const ReservationsPage = () => {
     const navigate = useNavigate();
     const { formatPrice } = useCurrency();
@@ -14,6 +16,7 @@ export const ReservationsPage = () => {
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [reservationToCancel, setReservationToCancel] = useState(null);
     const [cancellingId, setCancellingId] = useState(null);
+    const [cancellationError, setCancellationError] = useState('');
     // Success Toast states
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -62,6 +65,7 @@ export const ReservationsPage = () => {
     };
     const handleOpenCancelModal = (reservation) => {
         setReservationToCancel(reservation);
+        setCancellationError('');
         setIsCancelModalOpen(true);
     };
     const handleConfirmCancel = async () => {
@@ -78,13 +82,13 @@ export const ReservationsPage = () => {
             const dest = reservationToCancel.targetTerminalName;
             const depDate = formatDate(reservationToCancel.trip.departure);
             const depTime = formatTime(reservationToCancel.trip.departure);
-            setToastMessage(`Trip from ${origin} to ${dest} departing on ${depDate} ${depTime} has been successfully cancelled. Please expect a refund within a week.`);
+            setToastMessage(`Trip from ${origin} to ${dest} departing on ${depDate} ${depTime} was cancelled. The demo does not process real payments or refunds.`);
             setShowToast(true);
             setIsCancelModalOpen(false);
             setReservationToCancel(null);
         }
-        catch {
-            alert('Failed to cancel reservation');
+        catch (error) {
+            setCancellationError(getApiErrorMessage(error, 'Could not cancel this reservation. Please try again.'));
         }
         finally {
             setCancellingId(null);
@@ -342,6 +346,7 @@ export const ReservationsPage = () => {
                     {sortedReservations.map((reservation) => {
                     const displayStatus = getDisplayStatus(reservation);
                     const isCancelled = displayStatus === 'CANCELLED';
+                    const isExpired = displayStatus === 'EXPIRED';
                     const isUpcoming = displayStatus === 'UPCOMING';
                     const isPending = displayStatus === 'PENDING';
                     return (<Card key={reservation.id} className={`reservation-card ${isCancelled ? 'cancelled' : ''}`} variant="outline">
@@ -388,7 +393,7 @@ export const ReservationsPage = () => {
                           </div>
 
                           <div className="reservation-actions">
-                            {!isCancelled && (<>
+                            {!isCancelled && !isExpired && (<>
                                 {/* Cancel button only visible for UPCOMING status */}
                                 {(isUpcoming || isPending) && (<Button variant="outline" onClick={() => handleOpenCancelModal(reservation)} loading={cancellingId === reservation.id}>
                                     Cancel
@@ -401,6 +406,7 @@ export const ReservationsPage = () => {
                                 </Button>
                               </>)}
                             {isCancelled && (<span className="cancelled-indicator-stamp">CANCELLED</span>)}
+                            {isExpired && (<Button variant="outline" onClick={() => navigate('/')}>Find another trip</Button>)}
                           </div>
                         </Card>);
                 })}
@@ -581,6 +587,8 @@ export const ReservationsPage = () => {
               {formatDate(reservationToCancel.trip.departure)} at{' '}
               {formatTime(reservationToCancel.trip.departure)}?
             </p>
+            <p className="cancellation-payment-note">Cancellation does not issue a refund. Payments are simulated in this demo; no real payment gateway is connected.</p>
+            {cancellationError && <p className="cancellation-error" role="alert">{cancellationError}</p>}
             <div className="modal-buttons">
               <Button variant="ghost" onClick={() => setIsCancelModalOpen(false)}>
                 Abort Action

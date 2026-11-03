@@ -10,6 +10,7 @@ import busKaroo.model.enums.PaymentStatus;
 import busKaroo.model.enums.ReservationStatus;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
@@ -22,13 +23,16 @@ public class PaymentService {
     private final PaymentRepository paymentRepo;
     private final ReservationRepository reservationRepo;
 
+    @Value("${app.reservations.pending-ttl-minutes:15}")
+    private int pendingTtlMinutes = 15;
+
     public PaymentService(PaymentRepository paymentRepo, ReservationRepository reservationRepo) {
         this.paymentRepo = paymentRepo;
         this.reservationRepo = reservationRepo;
     }
 
     @Transactional
-    public void payReservation(Long reservationId, Long userId) {
+    public boolean payReservation(Long reservationId, Long userId) {
         Reservation reservation =
                 reservationRepo
                         .findById(reservationId)
@@ -44,6 +48,14 @@ public class PaymentService {
                             + reservation.getStatus());
         }
 
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        if (reservation.getCreatedAt() != null
+                && reservation.getCreatedAt().isBefore(now.minusMinutes(pendingTtlMinutes))) {
+            reservation.setStatus(ReservationStatus.EXPIRED);
+            reservationRepo.save(reservation);
+            return false;
+        }
+
         String transactionId = UUID.randomUUID().toString();
 
         Payment payment = new Payment();
@@ -53,12 +65,13 @@ public class PaymentService {
         payment.setCurrency("INR");
         payment.setStatus(PaymentStatus.COMPLETED);
         payment.setTransactionId(transactionId);
-        payment.setPaidAt(OffsetDateTime.now(ZoneOffset.UTC));
+        payment.setPaidAt(now);
         payment.setGatewayResponse("{\"status\": \"success\", \"mock\": true}");
 
         paymentRepo.save(payment);
 
         reservation.setStatus(ReservationStatus.CONFIRMED);
         reservationRepo.save(reservation);
+        return true;
     }
 }

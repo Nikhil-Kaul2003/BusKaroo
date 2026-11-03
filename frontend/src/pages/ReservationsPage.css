@@ -433,6 +433,26 @@
   opacity: 0.6;
 }
 
+.cancellation-payment-note {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--primary);
+  background: rgba(219, 74, 43, 0.08);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.cancellation-error {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--danger, #db4a2b) 35%, transparent);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--danger, #db4a2b) 9%, transparent);
+  color: var(--danger, #db4a2b);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
 /* ===================================
    Vertical Boarding Pass Ticket Modal Overlay
    =================================== */

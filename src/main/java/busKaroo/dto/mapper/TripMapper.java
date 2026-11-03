@@ -6,6 +6,7 @@ import busKaroo.model.RouteStop;
 import busKaroo.service.BusCategoryLabel;
 
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,9 @@ import java.util.Set;
 @Component
 public class TripMapper {
     private final busKaroo.dao.ReservationPassengerRepository reservationPassengerRepository;
+
+    @Value("${app.reservations.pending-ttl-minutes:15}")
+    private int pendingReservationTtlMinutes;
 
     public TripMapper(busKaroo.dao.ReservationPassengerRepository reservationPassengerRepository) {
         this.reservationPassengerRepository = reservationPassengerRepository;
@@ -149,7 +153,7 @@ public class TripMapper {
             int maxQuery = Math.max(queryStart, queryEnd);
 
             List<String> occupied = reservationPassengerRepository.findOccupiedSeatsForTripAndSegment(
-                    trip.getId(), minQuery, maxQuery);
+                    trip.getId(), minQuery, maxQuery, pendingReservationTtlMinutes);
             occupiedSet.addAll(occupied);
         }
 

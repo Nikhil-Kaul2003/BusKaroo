@@ -27,6 +27,5 @@ public abstract class TestContainerConfig {
         registry.add("spring.datasource.url", () -> jdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-        registry.add("spring.flyway.enabled", () -> "false");
     }
 }

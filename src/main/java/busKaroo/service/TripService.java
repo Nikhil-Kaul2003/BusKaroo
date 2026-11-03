@@ -12,6 +12,7 @@ import busKaroo.dto.response.ConnectionResponse;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,6 +33,9 @@ public class TripService {
 
     private final TripRepository tripRepository;
     private final busKaroo.dao.ReservationPassengerRepository reservationPassengerRepository;
+
+    @Value("${app.reservations.pending-ttl-minutes:15}")
+    private int pendingReservationTtlMinutes;
 
     public TripService(TripRepository tripRepository,
                        busKaroo.dao.ReservationPassengerRepository reservationPassengerRepository) {
@@ -104,7 +108,14 @@ public class TripService {
         int[] bookedCount = new int[numSegments];
 
         for (busKaroo.model.Reservation res : trip.getReservations()) {
-            if (res.getStatus() == busKaroo.model.enums.ReservationStatus.CANCELLED) {
+            if (res.getStatus() == busKaroo.model.enums.ReservationStatus.CANCELLED
+                    || res.getStatus() == busKaroo.model.enums.ReservationStatus.EXPIRED) {
+                continue;
+            }
+            if (res.getStatus() == busKaroo.model.enums.ReservationStatus.PENDING
+                    && res.getCreatedAt() != null
+                    && res.getCreatedAt().isBefore(
+                            OffsetDateTime.now(ZoneOffset.UTC).minusMinutes(pendingReservationTtlMinutes))) {
                 continue;
             }
             int start = res.getOriginRouteStop().getSequenceOrder();
@@ -501,7 +512,7 @@ public class TripService {
             int maxQuery = Math.max(queryStart, queryEnd);
 
             List<String> occupied = reservationPassengerRepository.findOccupiedSeatsForTripAndSegment(
-                    trip.getId(), minQuery, maxQuery);
+                    trip.getId(), minQuery, maxQuery, pendingReservationTtlMinutes);
             Set<String> occupiedSeats = new HashSet<>(occupied);
 
             List<String> availableList = new ArrayList<>(allSeats);

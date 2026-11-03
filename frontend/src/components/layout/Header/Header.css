@@ -566,3 +566,410 @@ html[data-theme='light'] .currency-trigger.open {
     /* Show reservations link in dropdown menu instead */
   }
 }
+
+
+/* ==========================================================
+   HEADER - PRO UPGRADE (last block of Header.css)
+   Sticky glass bar, truly centered nav, polished logo, orange accents.
+   Delete from this comment to the end of the file to undo.
+   ========================================================== */
+
+.header {
+  --hdr-accent: #db4a2b;
+  --hdr-accent-dark: #c23f23;
+  --hdr-accent-2: #f8a348;
+}
+
+/* ---------- Sticky glass bar ---------- */
+.header.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+          backdrop-filter: blur(14px) saturate(1.4);
+  transition: none;
+}
+
+html[data-theme='dark'] .header.header {
+  background: rgba(13, 18, 28, 0.78);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme='light'] .header.header {
+  background: rgba(228, 226, 221, 0.82);
+  border-bottom: 1px solid rgba(30, 30, 30, 0.1);
+}
+
+/* Thin orange line along the bottom edge */
+.header.header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--hdr-accent) 50%, transparent 100%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* ---------- Layout: logo left, nav truly centered, actions right ---------- */
+.header.header .header-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  max-width: 1320px;
+  min-height: 80px;
+  padding: 0 clamp(16px, 3vw, 36px);
+  gap: 24px;
+}
+
+.header.header .header-logo {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.header.header .header-nav {
+  grid-column: 2;
+  margin: 0;
+  gap: clamp(22px, 3vw, 40px);
+}
+
+.header.header .header-actions {
+  grid-column: 3;
+  justify-self: end;
+  margin-left: 0;
+  gap: 12px;
+}
+
+/* ---------- Logo: framed badge with hover sheen ---------- */
+.header.header .header-logo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 10px 24px -12px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.header.header .logo-image {
+  height: 58px;
+  border-radius: 14px;
+}
+
+.header.header .header-logo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.6) 50%, transparent 62%);
+  transform: translateX(-130%);
+  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Nav links: animated orange underline ---------- */
+.header.header .header-nav-link {
+  position: relative;
+  padding: 10px 2px;
+  font-family: 'Satoshi', 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: color 250ms ease;
+}
+
+.header.header .header-nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--hdr-accent), var(--hdr-accent-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.header.header .header-nav-link:hover,
+.header.header .header-nav-link:focus-visible,
+.header.header .header-nav-link.active,
+.header.header .header-nav-link[aria-current='page'] {
+  color: var(--hdr-accent);
+}
+
+.header.header .header-nav-link:hover::after,
+.header.header .header-nav-link:focus-visible::after,
+.header.header .header-nav-link.active::after,
+.header.header .header-nav-link[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+.header.header .header-nav-link:focus-visible {
+  outline: 2px solid var(--hdr-accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ---------- Theme toggle ---------- */
+.header.header .theme-toggle {
+  width: 42px;
+  height: 42px;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 250ms ease,
+    background-color 250ms ease,
+    color 250ms ease;
+}
+
+.header.header .theme-toggle svg {
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.header.header .theme-toggle:hover {
+  color: var(--hdr-accent);
+  border-color: color-mix(in srgb, var(--hdr-accent) 60%, transparent);
+  background: color-mix(in srgb, var(--hdr-accent) 10%, transparent);
+  transform: translateY(-2px);
+}
+
+.header.header .theme-toggle:hover svg {
+  transform: rotate(60deg);
+}
+
+.header.header .theme-toggle:focus-visible {
+  outline: 2px solid var(--hdr-accent);
+  outline-offset: 3px;
+}
+
+/* ---------- My Reservations: outlined orange button ---------- */
+.header.header .reservations-header-btn .btn {
+  padding: 9px 18px;
+  border: 1px solid color-mix(in srgb, var(--hdr-accent) 55%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--hdr-accent) 8%, transparent);
+  font-family: 'Satoshi', 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease;
+}
+
+html[data-theme='dark'] .header.header .reservations-header-btn .btn {
+  color: #ff9c7d;
+}
+
+html[data-theme='light'] .header.header .reservations-header-btn .btn {
+  color: var(--hdr-accent-dark);
+}
+
+.header.header .reservations-header-btn .btn:hover:not(:disabled) {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(150deg, #e0522f 0%, #c23f23 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 22px -12px rgba(219, 74, 43, 0.75);
+}
+
+/* ---------- Profile chip ---------- */
+.header.header .profile-trigger {
+  padding: 4px 14px 4px 4px;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 250ms ease,
+    background-color 250ms ease;
+}
+
+.header.header .profile-trigger:hover {
+  border-color: color-mix(in srgb, var(--hdr-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--hdr-accent) 8%, transparent);
+  transform: translateY(-1px);
+}
+
+.header.header .profile-trigger:focus-visible {
+  outline: 2px solid var(--hdr-accent);
+  outline-offset: 3px;
+}
+
+.header.header .avatar-circle {
+  background: linear-gradient(150deg, #e0522f 0%, #c23f23 100%);
+  border-color: rgba(255, 255, 255, 0.85);
+}
+
+.header.header .user-name-text {
+  font-family: 'Satoshi', 'Segoe UI', sans-serif;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Currency selector (when shown) ---------- */
+.header.header .currency-trigger {
+  border-radius: 12px;
+  border-color: color-mix(in srgb, currentColor 18%, transparent);
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.header.header .currency-trigger:hover,
+.header.header .currency-trigger.open {
+  border-color: color-mix(in srgb, var(--hdr-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--hdr-accent) 8%, transparent);
+  box-shadow: none;
+}
+
+/* ---------- Dropdowns ---------- */
+.header.header .profile-dropdown,
+.header.header .currency-dropdown {
+  top: calc(100% + 12px);
+  padding: 8px;
+  border-radius: 16px;
+  box-shadow: 0 28px 50px -22px rgba(0, 0, 0, 0.5);
+  transform-origin: top right;
+}
+
+.header.header .dropdown-item,
+.header.header .currency-option {
+  border-radius: 10px;
+}
+
+.header.header .dropdown-item:hover,
+.header.header .currency-option:hover {
+  background: rgba(219, 74, 43, 0.1);
+  color: var(--hdr-accent-dark);
+}
+
+.header.header .dropdown-item.logout-item:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+
+/* ---------- Hover on logo (mouse devices only) ---------- */
+@media (hover: hover) {
+  .header.header .header-logo:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow:
+      0 0 0 1px rgba(219, 74, 43, 0.45),
+      0 16px 30px -12px rgba(219, 74, 43, 0.55);
+  }
+
+  .header.header .header-logo:hover::after {
+    transform: translateX(130%);
+  }
+}
+
+/* ---------- Entrance animation ---------- */
+@keyframes hdr-drop {
+  from { opacity: 0; translate: 0 -14px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+.header.header .header-logo {
+  animation: hdr-drop 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.header.header .header-nav-link {
+  animation: hdr-drop 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.header.header .header-nav-link:nth-child(1) { animation-delay: 120ms; }
+.header.header .header-nav-link:nth-child(2) { animation-delay: 190ms; }
+.header.header .header-nav-link:nth-child(3) { animation-delay: 260ms; }
+.header.header .header-nav-link:nth-child(4) { animation-delay: 330ms; }
+
+.header.header .header-actions > * {
+  animation: hdr-drop 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.header.header .header-actions > *:nth-child(1) { animation-delay: 200ms; }
+.header.header .header-actions > *:nth-child(2) { animation-delay: 270ms; }
+.header.header .header-actions > *:nth-child(3) { animation-delay: 340ms; }
+.header.header .header-actions > *:nth-child(4) { animation-delay: 410ms; }
+
+/* ---------- Condense on scroll: header gets slimmer with a deeper shadow ---------- */
+@keyframes hdr-condense {
+  from { box-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+  to   { box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.6); }
+}
+
+@keyframes hdr-container-shrink {
+  from { min-height: 80px; }
+  to   { min-height: 64px; }
+}
+
+@keyframes hdr-logo-shrink {
+  from { height: 58px; }
+  to   { height: 46px; }
+}
+
+@supports (animation-timeline: scroll()) {
+  .header.header {
+    animation: hdr-condense linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 140px;
+  }
+
+  .header.header .header-container {
+    animation: hdr-container-shrink linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 140px;
+  }
+
+  .header.header .logo-image {
+    animation: hdr-logo-shrink linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 140px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  .header.header .header-container {
+    display: flex;
+    justify-content: space-between;
+    min-height: 64px;
+    gap: 10px;
+  }
+
+  .header.header .logo-image {
+    height: 44px;
+  }
+
+  .header.header .profile-trigger {
+    padding: 3px;
+  }
+
+  .header.header .reservations-header-btn .btn {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .header.header,
+  .header.header .header-container,
+  .header.header .logo-image,
+  .header.header .header-logo,
+  .header.header .header-logo::after,
+  .header.header .header-nav-link,
+  .header.header .header-nav-link::after,
+  .header.header .header-actions > *,
+  .header.header .theme-toggle,
+  .header.header .theme-toggle svg,
+  .header.header .reservations-header-btn .btn,
+  .header.header .profile-trigger {
+    animation: none !important;
+    transition: none !important;
+  }
+}

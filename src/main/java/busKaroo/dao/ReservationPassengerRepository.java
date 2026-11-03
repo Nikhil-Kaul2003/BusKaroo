@@ -16,20 +16,25 @@ public interface ReservationPassengerRepository extends JpaRepository<Reservatio
     void acquireAdvisoryLockForSeat(@Param("tripId") Long tripId, @Param("seatNumber") String seatNumber);
 
     @Query(value = "SELECT rp.* FROM reservation_passenger rp JOIN reservation r ON r.id = rp.reservation_id " +
-           "WHERE r.trip_id = :tripId AND rp.seat_number = :seatNumber AND r.status <> 'CANCELLED'", nativeQuery = true)
+           "WHERE r.trip_id = :tripId AND rp.seat_number = :seatNumber " +
+           "AND r.status NOT IN ('CANCELLED', 'EXPIRED') " +
+           "AND (r.status <> 'PENDING' OR r.created_at >= NOW() - (:pendingTtlMinutes * INTERVAL '1 minute'))", nativeQuery = true)
     List<ReservationPassenger> findActivePassengersByTripAndSeat(
-            @Param("tripId") Long tripId, 
-            @Param("seatNumber") String seatNumber);
+            @Param("tripId") Long tripId,
+            @Param("seatNumber") String seatNumber,
+            @Param("pendingTtlMinutes") int pendingTtlMinutes);
 
     @Query(value = "SELECT rp.seat_number FROM reservation_passenger rp JOIN reservation r ON r.id = rp.reservation_id " +
            "JOIN route_stop ors ON ors.id = r.origin_route_stop_id " +
            "JOIN route_stop trs ON trs.id = r.target_route_stop_id " +
            "WHERE r.trip_id = :tripId " +
-           "AND r.status <> 'CANCELLED' " +
+           "AND r.status NOT IN ('CANCELLED', 'EXPIRED') " +
+           "AND (r.status <> 'PENDING' OR r.created_at >= NOW() - (:pendingTtlMinutes * INTERVAL '1 minute')) " +
            "AND ((ors.sequence_order < :maxQuery AND :minQuery < trs.sequence_order) OR " +
            "     (trs.sequence_order < :maxQuery AND :minQuery < ors.sequence_order))", nativeQuery = true)
     List<String> findOccupiedSeatsForTripAndSegment(
             @Param("tripId") Long tripId,
             @Param("minQuery") int minQuery,
-            @Param("maxQuery") int maxQuery);
+            @Param("maxQuery") int maxQuery,
+            @Param("pendingTtlMinutes") int pendingTtlMinutes);
 }

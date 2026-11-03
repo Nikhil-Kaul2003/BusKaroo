@@ -13,6 +13,7 @@ import busKaroo.model.enums.ReservationStatus;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,9 @@ public class ReservationService {
     private final TripRepository tripRepo;
     private final UserRepository userRepo;
     private final RouteStopRepository routeStopRepo;
+
+    @Value("${app.reservations.pending-ttl-minutes:15}")
+    private int pendingReservationTtlMinutes;
 
     public ReservationService(
             ReservationRepository reservationRepo,
@@ -127,7 +131,7 @@ public class ReservationService {
         }
 
         // 4. Concurrency lock and seat availability checks (DB calls)
-        for (String seat : requestedSeats) {
+        for (String seat : requestedSeats.stream().sorted().toList()) {
             if (!isSeatAvailable(trip, seat, fromStopOrder, toStopOrder)) {
                 throw new SeatUnavailableException(
                         "Seat " + seat + " is not available for the selected segment.");
@@ -178,8 +182,9 @@ public class ReservationService {
         return reservationRepo.save(reservation);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Reservation> findByUserId(Long userId) {
+        reservationRepo.expirePendingReservations(pendingReservationTtlMinutes);
         return reservationRepo.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
@@ -194,6 +199,18 @@ public class ReservationService {
 
         if (!reservation.getUser().getId().equals(currentUserId)) {
             throw new ForbiddenException("User is not authorized to cancel this reservation");
+        }
+
+        // Treat retries from stale pages as success when the booking is already cancelled.
+        if (reservation.getStatus() == ReservationStatus.CANCELLED) {
+            return;
+        }
+
+        if (reservation.getStatus() != ReservationStatus.PENDING
+                && reservation.getStatus() != ReservationStatus.CONFIRMED) {
+            throw new IllegalStateException(
+                    "Only pending or confirmed reservations can be cancelled. Current status: "
+                            + reservation.getStatus());
         }
 
         Trip trip = reservation.getTrip();
@@ -218,7 +235,8 @@ public class ReservationService {
         passengerRepo.acquireAdvisoryLockForSeat(trip.getId(), seatNumber);
 
         List<ReservationPassenger> existingPassengers =
-                passengerRepo.findActivePassengersByTripAndSeat(trip.getId(), seatNumber);
+                passengerRepo.findActivePassengersByTripAndSeat(
+                        trip.getId(), seatNumber, pendingReservationTtlMinutes);
 
         List<RouteStop> stops = new java.util.ArrayList<>(trip.getRoute().getStops());
         stops.sort(Comparator.comparingInt(RouteStop::getSequenceOrder));

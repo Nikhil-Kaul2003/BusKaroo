@@ -47,6 +47,13 @@
   top: -120.7px;
 }
 
+/* Recolor only the Karoo portion of the official wordmark for the header. */
+.brand-logo-header .brand-logo-wordmark-orange {
+  filter: hue-rotate(25deg) saturate(0.88);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0 42%, #000 46%);
+  mask-image: linear-gradient(90deg, transparent 0 42%, #000 46%);
+}
+
 @media (max-width: 768px) {
   .brand-logo {
     transform: scale(0.88);
